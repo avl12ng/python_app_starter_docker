@@ -1,0 +1,235 @@
+/* Tokens CSS — charte reprise de digitization_commercial (frontend/src/styles/tokens.css) */
+@font-face {
+  font-family: 'HankenGrotesk';
+  src: url('../fonts/HankenGrotesk-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Primaire */
+  --color-primary: #fbbc3a;
+  --color-primary-hover: #e5a82e;
+  --color-primary-light: #fff0c4;
+  --color-primary-dim: #f5d078;
+  --color-primary-container: #fdbf3c;
+  --color-on-primary-container: #27253c;
+  --color-on-primary: #27253c;
+
+  /* Secondaire */
+  --color-secondary: #38ad9d;
+  --color-secondary-hover: #2e9688;
+  --color-secondary-container: #d4f0ec;
+  --color-on-secondary-container: #1a5c52;
+  --color-on-secondary: #ffffff;
+
+  /* Navy / tertiary */
+  --color-navy: #27253c;
+  --color-navy-light: #eaeaf2;
+  --color-tertiary: #27253c;
+  --color-tertiary-container: #eaeaf2;
+  --color-on-tertiary-container: #27253c;
+  --color-on-tertiary: #ffffff;
+  --color-brand-title: var(--color-navy);
+
+  /* Textes */
+  --color-text: #3c3c3b;
+  --color-text-body: #191c1e;
+  --color-text-muted: #444653;
+  --color-outline: #757684;
+  --color-border: #c4c5d5;
+
+  /* Surfaces */
+  --color-bg: #f7f9fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f2f4f6;
+
+  /* Feedback */
+  --color-error: #ba1a1a;
+  --color-error-bg: #ffdad6;
+  --color-success: #2e7d32;
+
+  /* Typo & formes (AppTheme) */
+  --font-family: 'HankenGrotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius-input: 12px;
+  --radius-button: 12px;
+  --radius-card: 16px;
+  --control-min-height: 48px;
+
+  /* Breakpoints (référence JS : theme/breakpoints.ts) */
+  --bp-mobile: 600px;
+  --bp-tablet: 1024px;
+  --bp-desktop: 1280px;
+  --shell-sidebar-width: 260px;
+  --shell-mobile-bar-height: 56px;
+  --shell-bottom-nav-height: 0px;
+  --shell-glass: rgba(255, 255, 255, 0.82);
+  --shell-glass-strong: rgba(255, 255, 255, 0.92);
+  --shell-blur: blur(14px);
+  --shadow-dropdown: 0 8px 24px rgba(39, 37, 60, 0.12);
+  --shadow-soft: 0 4px 12px rgba(39, 37, 60, 0.06);
+  --shadow-navy: 0 8px 24px color-mix(in srgb, var(--color-navy) 12%, transparent);
+  --transition-card: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --shell-bottom-nav-height: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text-body);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text);
+  font-weight: 600;
+}
+a {
+  color: var(--color-secondary);
+}
+a:hover {
+  color: var(--color-secondary-hover);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Inputs — InputDecorationTheme Flutter
+   `input[type=text]` ne matche pas un <input> sans attribut type.
+   date / tel / time sont exclus de la liste historique. */
+.input,
+input:not([type]),
+input[type='text'],
+input[type='email'],
+input[type='search'],
+input[type='number'],
+input[type='password'],
+input[type='tel'],
+input[type='url'],
+input[type='date'],
+input[type='time'],
+input[type='datetime-local'],
+input[type='month'],
+textarea,
+select {
+  font: inherit;
+  color: var(--color-text-body);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  min-height: var(--control-min-height);
+  padding: 0 12px;
+}
+
+.input:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  border-width: 2px;
+}
+
+/* Boutons elevated — secondary teal */
+.btn,
+button.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control-min-height);
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-button);
+  background: var(--color-secondary);
+  color: var(--color-on-secondary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover,
+button.btn-primary:hover {
+  background: var(--color-secondary-hover);
+}
+
+.btn:disabled,
+.btn-primary-brand:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  min-height: var(--control-min-height);
+  padding: 0 20px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-navy);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  background: var(--color-surface-muted);
+}
+
+.btn-primary-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--control-min-height);
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--radius-button);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(251, 188, 58, 0.35);
+}
+.btn-primary-brand:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.btn-primary-brand:disabled {
+  box-shadow: none;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}

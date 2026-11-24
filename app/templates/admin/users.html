@@ -1,0 +1,54 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head, export_buttons, search_field %}
+{% block title %}Utilisateurs{% endblock %}
+{% block content %}
+{% call page_head('Utilisateurs', 'Comptes autorisés à se connecter. Cliquez sur une ligne pour la modifier.') %}
+  {{ export_buttons('users-export', '/admin/users/export', query) }}
+  <a class="btn" href="/admin/users/new">{{ icon('plus', 20) }} Nouvel utilisateur</a>
+{% endcall %}
+
+<form class="card filters" method="get" action="/admin/users" data-live-search role="search">
+  {{ search_field('q', filters.q, 'Rechercher un identifiant ou un courriel') }}
+  <select name="role" aria-label="Rôle">
+    <option value="">Tous les rôles</option>
+    {% for r in roles %}<option value="{{ r.name }}" {{ 'selected' if filters.role == r.name }}>{{ r.description or r.name }}</option>{% endfor %}
+  </select>
+  <select name="status" aria-label="Statut">
+    <option value="">Tous les statuts</option>
+    <option value="active" {{ 'selected' if filters.status == 'active' }}>Actifs</option>
+    <option value="inactive" {{ 'selected' if filters.status == 'inactive' }}>Désactivés</option>
+  </select>
+  <noscript><button type="submit" class="btn">Filtrer</button></noscript>
+</form>
+
+<div data-live-results>
+  <section class="kpis">
+    <div class="kpi"><div class="kpi__icon kpi__icon--navy">{{ icon('group') }}</div><div><p class="kpi__label">Comptes</p><p class="kpi__value">{{ totals.all }}</p></div></div>
+    <div class="kpi"><div class="kpi__icon kpi__icon--success">{{ icon('check') }}</div><div><p class="kpi__label">Actifs</p><p class="kpi__value">{{ totals.active }}</p></div></div>
+    <div class="kpi"><div class="kpi__icon kpi__icon--primary">{{ icon('shield') }}</div><div><p class="kpi__label">Avec 2FA</p><p class="kpi__value">{{ totals.totp }}</p></div></div>
+  </section>
+  <section class="card card--flush">
+    {% if users %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Identifiant</th><th>Courriel</th><th>Rôle</th><th>Statut</th><th>2FA</th><th>Dernière connexion</th></tr></thead>
+        <tbody>
+          {% for u in users %}
+          <tr data-href="/admin/users/{{ u.id }}">
+            <td class="strong"><a href="/admin/users/{{ u.id }}">{{ u.username }}</a></td>
+            <td>{{ u.email }}</td>
+            <td><span class="badge badge--{{ 'primary' if u.role.name == 'admin' else 'navy' }}">{{ u.role.description or u.role.name }}</span></td>
+            <td>{% if u.is_active %}<span class="badge badge--success">Actif</span>{% else %}<span class="badge badge--error">Désactivé</span>{% endif %}</td>
+            <td>{% if u.totp_enabled %}<span class="badge badge--teal">Oui</span>{% else %}<span class="muted">Non</span>{% endif %}</td>
+            <td class="muted">{{ u.last_login_at | datetime_fr or 'Jamais' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="empty">Aucun utilisateur pour ces critères.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

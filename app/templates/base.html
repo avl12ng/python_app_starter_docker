@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FBBC3A">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}{% endblock %} · {{ settings.app_name }}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='img/logo.svg') }}">
+  {% for css in ['tokens', 'geo-background', 'components', 'shell', 'auth'] %}
+  <link rel="stylesheet" href="{{ url_for('static', path='css/' ~ css ~ '.css') }}?v={{ asset_version }}">
+  {% endfor %}
+  <script type="module" src="{{ url_for('static', path='js/app.js') }}?v={{ asset_version }}"></script>
+</head>
+<body>
+  {# Fond géométrique (triangles teal / jaune / marine) #}
+  <div class="geo-background" aria-hidden="true">
+    {% for i in range(1, 8) %}<span class="geo-background__triangle geo-background__t{{ i }}"></span>{% endfor %}
+  </div>
+  {% block body %}{% endblock %}
+</body>
+</html>

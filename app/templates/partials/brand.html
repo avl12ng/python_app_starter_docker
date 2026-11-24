@@ -1,0 +1,15 @@
+{# Logo de l'application : remplacer app/static/img/logo.svg (sert aussi de favicon) #}
+{% macro brand_mark(size=34) -%}
+<img src="/static/img/logo.svg" width="{{ size }}" height="{{ size }}" alt="">
+{%- endmacro %}
+
+{% macro brand(settings, size=34) -%}
+<a class="shell__brand" href="/">
+  {{ brand_mark(size) }}
+  <span class="shell__brand-text">
+    <span class="shell__brand-name">{{ settings.org_name }}</span>
+    <span class="shell__brand-divider" aria-hidden="true"></span>
+    <span class="shell__brand-product">{{ settings.app_short }}</span>
+  </span>
+</a>
+{%- endmacro %}

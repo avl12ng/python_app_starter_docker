@@ -1,0 +1,10 @@
+{% extends "shell.html" if user else "auth_layout.html" %}
+{% block title %}Erreur {{ code }}{% endblock %}
+{% block heading %}Erreur {{ code }}{% endblock %}
+{% block content %}
+<section class="{{ 'card' if user }}">
+  <p class="error-code">{{ code }}</p>
+  <p class="card__lead">{{ message }}</p>
+  <a class="btn" href="/">Retour à l'accueil</a>
+</section>
+{% endblock %}

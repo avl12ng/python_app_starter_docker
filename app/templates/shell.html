@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "partials/brand.html" import brand, brand_mark %}
+{% from "partials/ui.html" import flashes as render_flashes %}
+{% block body %}
+{% set main_items = nav | selectattr('section', 'equalto', 'main') | list %}
+{% set admin_items = nav | selectattr('section', 'equalto', 'admin') | list %}
+{% macro nav_link(item) -%}
+<a href="{{ item.href }}" class="shell__nav-link{{ ' shell__nav-link--active' if active == item.id }}"{{ ' aria-current="page"' | safe if active == item.id }}>
+  {{ icon(item.icon) }}<span>{{ item.label }}</span>
+</a>
+{%- endmacro %}
+{% macro logout_button() -%}
+<form method="post" action="/logout" class="shell__logout-form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <button type="submit" class="shell__icon-btn" aria-label="Déconnexion" title="Déconnexion">{{ icon('logout') }}</button>
+</form>
+{%- endmacro %}
+
+<div class="shell">
+  <aside class="shell__sidebar" id="shell-menu" aria-label="Navigation principale">
+    {{ brand(settings, 34) }}
+    <nav class="shell__nav">
+      {% for item in main_items %}{{ nav_link(item) }}{% endfor %}
+      {% if admin_items %}
+      <p class="shell__nav-section">Administration</p>
+      {% for item in admin_items %}{{ nav_link(item) }}{% endfor %}
+      {% endif %}
+    </nav>
+    <div class="shell__user">
+      <a class="shell__avatar" href="/account" title="Mon compte">{{ user.initials }}</a>
+      <div class="shell__user-meta">
+        <p class="shell__user-name"><a href="/account">{{ user.username }}</a></p>
+        <p class="shell__user-role">{{ user.role.description or user.role.name }}</p>
+      </div>
+      {{ logout_button() }}
+    </div>
+  </aside>
+  <button type="button" class="shell__backdrop" data-menu-close aria-label="Fermer le menu"></button>
+
+  <div class="shell__main">
+    <div class="shell__mobile-bar">
+      <button type="button" class="shell__icon-btn" data-menu-toggle aria-controls="shell-menu" aria-expanded="false" aria-label="Menu">{{ icon('menu') }}</button>
+      {{ brand_mark(28) }}
+      <span class="shell__brand-name">{{ settings.org_name }}</span>
+      <span class="shell__brand-divider" aria-hidden="true"></span>
+      <span class="shell__brand-product">{{ settings.app_short }}</span>
+      {{ logout_button() }}
+    </div>
+
+    <main class="shell__content">
+      {{ render_flashes(flashes) }}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <nav class="shell__bottom-nav" aria-label="Navigation rapide">
+    {% for item in main_items[:3] %}{{ nav_link(item) }}{% endfor %}
+    <a href="/account" class="shell__nav-link{{ ' shell__nav-link--active' if active == 'account' }}">{{ icon('user') }}<span>Compte</span></a>
+    {% if admin_items %}
+    <button type="button" class="shell__nav-link" data-menu-toggle aria-controls="shell-menu" aria-expanded="false">{{ icon('settings') }}<span>Admin</span></button>
+    {% endif %}
+  </nav>
+</div>
+{% endblock %}

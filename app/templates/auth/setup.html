@@ -1,0 +1,32 @@
+{% extends "auth_layout.html" %}
+{% from "partials/ui.html" import password_rules %}
+{% block title %}Première configuration{% endblock %}
+{% block card_class %} auth-card--wide{% endblock %}
+{% block heading %}Bienvenue{% endblock %}
+{% block content %}
+<p class="auth-lead">Première utilisation : créez le compte <strong>administrateur</strong> de {{ settings.app_name }}.
+  Il permettra ensuite de créer les autres comptes.</p>
+<form method="post" action="/setup" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <div class="field">
+    <label for="username">Identifiant</label>
+    <input id="username" name="username" value="{{ form.get('username', '') }}" maxlength="50" autocomplete="username" autocapitalize="none" required autofocus>
+    <p class="field__hint">Lettres, chiffres, point, tiret ou soulignement.</p>
+  </div>
+  <div class="field">
+    <label for="email">Courriel</label>
+    <input id="email" name="email" type="email" value="{{ form.get('email', '') }}" autocomplete="email" required>
+    <p class="field__hint">Sert à recevoir un code si le mot de passe est oublié.</p>
+  </div>
+  <div class="field">
+    <label for="password">Mot de passe</label>
+    <input id="password" name="password" type="password" autocomplete="new-password" data-pwd-new required>
+  </div>
+  <div class="field">
+    <label for="password_confirm">Confirmation</label>
+    <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" data-pwd-confirm required>
+  </div>
+  {{ password_rules(rules, min_length) }}
+  <button type="submit" class="btn-primary-brand btn-block">Créer le compte administrateur</button>
+</form>
+{% endblock %}

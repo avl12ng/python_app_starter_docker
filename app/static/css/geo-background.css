@@ -1,0 +1,98 @@
+/**
+ * Fond géométrique décoratif — source Flutter `GeoBackground`.
+ * Triangles en CSS (approximation visuelle des CustomPaint).
+ */
+.geo-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.geo-background__triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+/* Teal top-right (points down, ~15°) */
+.geo-background__t1 {
+  top: -4%;
+  right: 4%;
+  border-width: 0 75px 180px 75px;
+  border-color: transparent transparent color-mix(in srgb, var(--color-secondary) 55%, transparent)
+    transparent;
+  transform: rotate(15deg);
+}
+
+/* Primary bottom-left */
+.geo-background__t2 {
+  bottom: 8%;
+  left: -3%;
+  border-width: 0 56px 130px 56px;
+  border-color: transparent transparent color-mix(in srgb, var(--color-primary) 55%, transparent)
+    transparent;
+  transform: rotate(-25deg);
+}
+
+/* Navy mid-left (points up) */
+.geo-background__t3 {
+  top: 18%;
+  left: 8%;
+  border-width: 100px 40px 0 40px;
+  border-color: color-mix(in srgb, var(--color-navy) 35%, transparent) transparent transparent
+    transparent;
+  transform: rotate(10deg);
+}
+
+/* Teal bottom-right */
+.geo-background__t4 {
+  bottom: 22%;
+  right: 12%;
+  border-width: 0 28px 70px 28px;
+  border-color: transparent transparent color-mix(in srgb, var(--color-secondary) 40%, transparent)
+    transparent;
+  transform: rotate(40deg);
+}
+
+/* Primary mid-right (points up) */
+.geo-background__t5 {
+  top: 42%;
+  right: -1%;
+  border-width: 60px 24px 0 24px;
+  border-color: color-mix(in srgb, var(--color-primary) 45%, transparent) transparent transparent
+    transparent;
+  transform: rotate(-18deg);
+}
+
+/* Navy bottom center */
+.geo-background__t6 {
+  bottom: 6%;
+  left: 72%;
+  border-width: 0 18px 48px 18px;
+  border-color: transparent transparent color-mix(in srgb, var(--color-navy) 28%, transparent)
+    transparent;
+  transform: rotate(55deg);
+}
+
+/* Primary-hover mid */
+.geo-background__t7 {
+  top: 62%;
+  left: 18%;
+  border-width: 0 36px 90px 36px;
+  border-color: transparent transparent
+    color-mix(in srgb, var(--color-primary-hover) 32%, transparent) transparent;
+  transform: rotate(-8deg);
+}
+
+@media (max-width: 600px) {
+  .geo-background__t1 {
+    border-width: 0 48px 110px 48px;
+  }
+  .geo-background__t2 {
+    border-width: 0 40px 90px 40px;
+  }
+}

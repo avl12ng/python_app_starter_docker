@@ -1,0 +1,69 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head, password_rules %}
+{% block title %}{{ target.username if target else 'Nouvel utilisateur' }}{% endblock %}
+{% block content %}
+{{ page_head(target.username if target else 'Nouvel utilisateur',
+             ('Créé le ' ~ (target.created_at | date_fr) ~ ' · dernière connexion : ' ~ (target.last_login_at | datetime_fr or 'jamais')) if target else 'Le mot de passe initial est à transmettre à la personne, qui pourra le changer dans « Mon compte ».',
+             back=('/admin/users', 'Utilisateurs')) }}
+
+<section class="card">
+  <form method="post" action="{{ '/admin/users/' ~ target.id if target else '/admin/users/new' }}" class="form">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <div class="form-row">
+      <div class="field">
+        <label for="username">Identifiant</label>
+        {% if target %}
+        <input id="username" value="{{ target.username }}" disabled>
+        <p class="field__hint">L'identifiant ne peut pas être modifié.</p>
+        {% else %}
+        <input id="username" name="username" value="{{ form.username or '' }}" maxlength="50" autocapitalize="none" required autofocus>
+        {% endif %}
+      </div>
+      <div class="field">
+        <label for="email">Courriel</label>
+        <input id="email" name="email" type="email" value="{{ form.email or '' }}" required>
+      </div>
+      <div class="field">
+        <label for="role_id">Rôle</label>
+        <select id="role_id" name="role_id" required>
+          {% for r in roles %}<option value="{{ r.id }}" {{ 'selected' if form.role_id == r.id or (not form.role_id and r.name == 'user') }}>{{ r.description or r.name }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" name="is_active" value="true" {{ 'checked' if form.is_active or not target and form.is_active is not defined }}> Compte actif (peut se connecter)</label>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="password">{{ 'Nouveau mot de passe (facultatif)' if target else 'Mot de passe initial' }}</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" data-pwd-new {{ '' if target else 'required' }}>
+      </div>
+      <div class="field">
+        <label for="password_confirm">Confirmation</label>
+        <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" data-pwd-confirm {{ '' if target else 'required' }}>
+      </div>
+    </div>
+    {{ password_rules(rules, min_length) }}
+
+    {% if target and target.totp_enabled %}
+    <label class="check"><input type="checkbox" name="reset_totp" value="true"> Réinitialiser la double authentification (téléphone perdu)</label>
+    {% endif %}
+    {% if target %}<p class="field__hint">Désactiver le compte, changer son rôle ou son mot de passe déconnecte ses sessions ouvertes.</p>{% endif %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn">{{ 'Enregistrer' if target else 'Créer le compte' }}</button>
+      <a class="btn-ghost" href="/admin/users">Annuler</a>
+    </div>
+  </form>
+</section>
+
+{% if target and target.id != user.id %}
+<section class="card">
+  <h2 class="card__title">{{ icon('trash') }} Supprimer le compte</h2>
+  <p class="card__lead">Préférez la désactivation : elle bloque la connexion en gardant l'historique. La suppression est définitive.</p>
+  <form method="post" action="/admin/users/{{ target.id }}/delete" data-confirm="Supprimer définitivement le compte « {{ target.username }} » ? Cette action est irréversible.">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <button type="submit" class="btn-danger">Supprimer définitivement</button>
+  </form>
+</section>
+{% endif %}
+{% endblock %}

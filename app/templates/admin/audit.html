@@ -1,0 +1,50 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head, export_buttons, search_field %}
+{% block title %}Journal d'audit{% endblock %}
+{% block content %}
+{% call page_head("Journal d'audit", "Connexions et actions sensibles. Les entrées sont conservées " ~ settings.audit_retention_days ~ " jours.") %}
+  {{ export_buttons('audit-export', '/admin/audit/export', query) }}
+{% endcall %}
+
+<form class="card filters" method="get" action="/admin/audit" data-live-search role="search">
+  {{ search_field('q', filters.q, 'Rechercher un acteur, une action, une adresse IP…') }}
+  <select name="period" aria-label="Période">
+    {% for days, label in periods.items() %}<option value="{{ days }}" {{ 'selected' if filters.period == days }}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="kind" aria-label="Catégorie">
+    <option value="">Toutes les catégories</option>
+    {% for key, label in categories.items() %}<option value="{{ key }}" {{ 'selected' if filters.kind == key }}>{{ label }}</option>{% endfor %}
+  </select>
+  <noscript><button type="submit" class="btn">Filtrer</button></noscript>
+</form>
+
+<div data-live-results>
+  <section class="kpis">
+    <div class="kpi"><div class="kpi__icon kpi__icon--navy">{{ icon('history') }}</div><div><p class="kpi__label">Événements</p><p class="kpi__value">{{ total }}</p></div></div>
+    <div class="kpi"><div class="kpi__icon kpi__icon--primary">{{ icon('lock') }}</div><div><p class="kpi__label">Échecs de connexion</p><p class="kpi__value">{{ failed }}</p></div></div>
+  </section>
+  <section class="card card--flush">
+    {% if entries %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Action</th><th>Acteur</th><th>Détails</th><th>Adresse IP</th></tr></thead>
+        <tbody>
+          {% for e in entries %}
+          <tr>
+            <td class="muted">{{ e.created_at | datetime_fr }}</td>
+            <td><span class="badge badge--{{ 'error' if e.action.endswith('failed') else 'teal' if e.action.startswith('auth.') else 'navy' }}">{{ label(e.action) }}</span></td>
+            <td class="strong">{{ e.actor_username or '—' }}</td>
+            <td class="details">{{ details(e.details) }}</td>
+            <td class="muted">{{ e.ip_address }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if total > entries | length %}<p class="table-foot">{{ entries | length }} événements affichés sur {{ total }} : affinez la recherche ou utilisez l'export pour tout obtenir.</p>{% endif %}
+    {% else %}
+    <p class="empty">Aucun événement pour ces critères.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

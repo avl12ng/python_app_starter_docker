@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "partials/brand.html" import brand_mark %}
+{% from "partials/ui.html" import flashes as render_flashes %}
+{% block body %}
+<main class="auth-page">
+  <div class="card auth-card{% block card_class %}{% endblock %}">
+    <div class="auth-brand">
+      {{ brand_mark(40) }}
+      <div>
+        <p class="auth-eyebrow">{{ settings.org_name }} · {{ settings.app_short }}</p>
+        <h1>{% block heading %}{% endblock %}</h1>
+      </div>
+    </div>
+    {{ render_flashes(flashes) }}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+{% endblock %}

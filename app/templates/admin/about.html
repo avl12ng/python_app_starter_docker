@@ -1,0 +1,20 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head %}
+{% block title %}À propos{% endblock %}
+{% block content %}
+{{ page_head('À propos', settings.app_name) }}
+<div class="grid-2">
+  <section class="card">
+    <h2 class="card__title">{{ icon('info') }} Informations techniques</h2>
+    <dl class="dl">
+      {% for k, v in info.items() %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}
+    </dl>
+  </section>
+  <section class="card">
+    <h2 class="card__title">{{ icon('history') }} Versions</h2>
+    <dl class="dl">
+      {% for version, text in changelog %}<dt>v{{ version }}</dt><dd>{{ text }}</dd>{% endfor %}
+    </dl>
+  </section>
+</div>
+{% endblock %}

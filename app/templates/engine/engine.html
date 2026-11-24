@@ -1,0 +1,44 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head %}
+{% block title %}Moteur{% endblock %}
+{% block content %}
+{{ page_head('Moteur', "Exemple de branchement du moteur Python (app/engine/core.py) : statistiques descriptives d'une série. Remplacez-le par le calcul métier.") }}
+
+{% if error %}<div class="flash flash--error">{{ icon('info', 20) }}<span>{{ error }}</span></div>{% endif %}
+
+<div class="grid-2">
+  <section class="card">
+    <h2 class="card__title">{{ icon('science') }} Données</h2>
+    <form method="post" action="/engine" class="form">
+      <input type="hidden" name="csrf" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="label">Libellé</label>
+        <input id="label" name="label" value="{{ form.get('label', '') }}" maxlength="120" placeholder="ex. Mesures du lot 42">
+      </div>
+      <div class="field">
+        <label for="values">Valeurs</label>
+        <textarea id="values" name="values" required placeholder="12,5 ; 13 ; 14,2">{{ form.get('values', '') }}</textarea>
+        <p class="field__hint">Séparées par des espaces, des retours à la ligne ou des points-virgules. Virgule décimale acceptée.</p>
+      </div>
+      <div class="form-actions"><button type="submit" class="btn-primary-brand">{{ icon('play', 18) }} Lancer le calcul</button></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2 class="card__title">{{ icon('dashboard') }} Résultat</h2>
+    {% if result %}
+    <dl class="dl">
+      <dt>Série</dt><dd>{{ result.label }}</dd>
+      <dt>Nombre de valeurs</dt><dd>{{ result.count }}</dd>
+      <dt>Minimum</dt><dd>{{ '%.4g' | format(result.minimum) | replace('.', ',') }}</dd>
+      <dt>Maximum</dt><dd>{{ '%.4g' | format(result.maximum) | replace('.', ',') }}</dd>
+      <dt>Moyenne</dt><dd>{{ '%.4g' | format(result.mean) | replace('.', ',') }}</dd>
+      <dt>Médiane</dt><dd>{{ '%.4g' | format(result.median) | replace('.', ',') }}</dd>
+      <dt>Écart type</dt><dd>{{ '%.4g' | format(result.stdev) | replace('.', ',') }}</dd>
+    </dl>
+    {% else %}
+    <p class="empty">Saisissez des valeurs puis lancez le calcul.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

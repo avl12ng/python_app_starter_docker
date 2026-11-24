@@ -1,0 +1,310 @@
+/* Coque de l'application — reprise de digitization_commercial (layout/AppShell + styles/shell.css).
+   Bureau : barre latérale vitrée fixe. Mobile/tablette : barre haute + tiroir + navigation basse. */
+
+.shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 100dvh;
+}
+
+.shell__sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--shell-sidebar-width);
+  display: flex;
+  flex-direction: column;
+  background: var(--shell-glass);
+  backdrop-filter: var(--shell-blur);
+  -webkit-backdrop-filter: var(--shell-blur);
+  border-right: 1px solid var(--color-border);
+  padding: 20px 0 16px;
+  z-index: 30;
+}
+
+.shell__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 8px 20px 28px;
+  text-decoration: none;
+}
+.shell__brand-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.shell__brand-name {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+  white-space: nowrap;
+}
+.shell__brand-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+.shell__brand-product {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.shell__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 0 8px;
+  min-height: 0;
+  overflow-y: auto;
+}
+.shell__nav-section {
+  margin: 18px 14px 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-outline);
+}
+.shell__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  color: var(--color-navy);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.shell__nav-link svg {
+  color: var(--color-navy);
+  flex-shrink: 0;
+}
+.shell__nav-link:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-navy);
+}
+.shell__nav-link--active,
+.shell__nav-link--active:hover {
+  color: var(--color-primary);
+  background: transparent;
+  font-weight: 600;
+}
+.shell__nav-link--active svg {
+  color: var(--color-primary);
+}
+
+.shell__user {
+  margin: auto 12px 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shell__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  color: var(--color-on-secondary);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.shell__avatar:hover {
+  color: var(--color-on-secondary);
+  background: var(--color-secondary-hover);
+}
+.shell__user-meta {
+  min-width: 0;
+  flex: 1;
+}
+.shell__user-name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shell__user-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.shell__user-role {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.shell__logout-form {
+  margin: 0;
+}
+.shell__icon-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-navy);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.shell__icon-btn:hover {
+  background: var(--color-surface-muted);
+}
+
+.shell__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+.shell__mobile-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--shell-mobile-bar-height);
+  padding: env(safe-area-inset-top, 0px) 8px 0 4px;
+  background: var(--shell-glass);
+  backdrop-filter: var(--shell-blur);
+  -webkit-backdrop-filter: var(--shell-blur);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 25;
+}
+.shell__mobile-bar .shell__logout-form {
+  margin-left: auto;
+}
+
+.shell__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+  max-width: 1280px;
+  padding: 20px 24px 32px;
+}
+
+.shell__backdrop {
+  display: none;
+}
+.shell__bottom-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .shell__main {
+    margin-left: var(--shell-sidebar-width);
+  }
+}
+
+@media (max-width: 1023px) {
+  .shell__mobile-bar {
+    display: flex;
+  }
+  .shell__content {
+    padding: 16px 16px calc(16px + var(--shell-bottom-nav-height));
+  }
+  /* La barre latérale devient un tiroir */
+  .shell__sidebar {
+    width: min(320px, 88vw);
+    background: var(--color-surface);
+    box-shadow: 8px 0 32px rgba(39, 37, 60, 0.16);
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+    z-index: 51;
+    visibility: hidden;
+  }
+  .shell--menu-open .shell__sidebar {
+    transform: none;
+    visibility: visible;
+  }
+  .shell--menu-open .shell__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    border: none;
+    padding: 0;
+    background: rgba(39, 37, 60, 0.4);
+    cursor: pointer;
+  }
+
+  .shell__bottom-nav {
+    display: flex;
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    justify-content: space-around;
+    gap: 2px;
+    min-height: var(--shell-bottom-nav-height);
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px));
+    background: var(--shell-glass-strong);
+    backdrop-filter: var(--shell-blur);
+    -webkit-backdrop-filter: var(--shell-blur);
+    border-top: 1px solid var(--color-border);
+  }
+  .shell__bottom-nav .shell__nav-link {
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .shell__bottom-nav .shell__nav-link span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .shell__bottom-nav .shell__nav-link--active {
+    background: var(--color-primary-light);
+  }
+}
+
+button.shell__nav-link {
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.shell__brand img,
+.shell__mobile-bar img {
+  flex-shrink: 0;
+}

@@ -1,0 +1,45 @@
+{% extends "shell.html" %}
+{% block title %}Accueil{% endblock %}
+{% block content %}
+<section class="banner">
+  <div>
+    <p class="banner__hello">Bonjour {{ user.username }}</p>
+    <p class="banner__role">{{ user.role.description or user.role.name }}</p>
+  </div>
+  <span class="banner__badge">{{ icon('calendar', 18) }} {{ today_label }}</span>
+</section>
+
+<section class="kpis" aria-label="Votre compte">
+  <div class="kpi">
+    <div class="kpi__icon kpi__icon--{{ 'success' if user.totp_enabled else 'primary' }}">{{ icon('shield') }}</div>
+    <div>
+      <p class="kpi__label">Double authentification</p>
+      <p class="kpi__value kpi__value--text">{% if user.totp_enabled %}Active{% else %}<a href="/account#totp">À activer</a>{% endif %}</p>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi__icon kpi__icon--navy">{{ icon('history') }}</div>
+    <div>
+      <p class="kpi__label">Connexion précédente</p>
+      <p class="kpi__value kpi__value--text">{{ prev_login | datetime_fr or 'Première connexion' }}</p>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi__icon">{{ icon('key') }}</div>
+    <div>
+      <p class="kpi__label">Permissions</p>
+      <p class="kpi__value">{{ user.permissions | length }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="tiles" aria-label="Modules">
+  {% for tile in tiles %}
+  <a class="tile" href="{{ tile.href }}">
+    <span class="tile__icon">{{ icon(tile.icon) }}</span>
+    <span class="tile__title">{{ tile.title }}</span>
+    <span class="tile__text">{{ tile.text }}</span>
+  </a>
+  {% endfor %}
+</section>
+{% endblock %}

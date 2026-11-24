@@ -1,0 +1,67 @@
+{% extends "shell.html" %}
+{% from "partials/ui.html" import page_head %}
+{% block title %}Rôles et permissions{% endblock %}
+{% block content %}
+{{ page_head('Rôles et permissions', 'Cochez ce que chaque rôle peut faire. Le menu et les pages s\'adaptent aussitôt. Les permissions verrouillées du rôle administrateur empêchent de perdre l\'accès à l\'outil.') }}
+
+<form method="post" action="/admin/roles" class="card card--flush">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Permission</th>
+          {% for r in roles %}<th class="center">{{ r.description or r.name }}<br><span class="muted">{{ counts.get(r.id, 0) }} compte(s)</span></th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, label in catalog.items() %}
+        <tr>
+          <td><span class="strong">{{ label }}</span><br><span class="muted">{{ key }}</span></td>
+          {% for r in roles %}
+          {% set is_locked = r.name == super_role and key in locked %}
+          <td class="center">
+            <input type="checkbox" name="perm_{{ r.id }}" value="{{ key }}" aria-label="{{ label }} — {{ r.description or r.name }}"
+                   {{ 'checked' if key in r.permission_keys or is_locked }} {{ 'disabled' if is_locked }}>
+            {% if is_locked %}<span class="visually-hidden">(verrouillé)</span>{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="table-foot form-actions form-actions--split">
+    <span>Les cases grisées sont verrouillées.</span>
+    <button type="submit" class="btn">Enregistrer les permissions</button>
+  </p>
+</form>
+
+<div class="grid-2">
+  <section class="card">
+    <h2 class="card__title">{{ icon('plus') }} Nouveau rôle</h2>
+    <form method="post" action="/admin/roles/new" class="form">
+      <input type="hidden" name="csrf" value="{{ csrf_token }}">
+      <div class="form-row">
+        <div class="field"><label for="role_name">Code</label><input id="role_name" name="name" maxlength="50" placeholder="ex. technicien" required></div>
+        <div class="field"><label for="role_desc">Libellé</label><input id="role_desc" name="description" maxlength="255" placeholder="ex. Technicien"></div>
+      </div>
+      <div class="form-actions"><button type="submit" class="btn">Créer le rôle</button></div>
+    </form>
+  </section>
+  <section class="card">
+    <h2 class="card__title">{{ icon('trash') }} Supprimer un rôle</h2>
+    <p class="card__lead">Seul un rôle attribué à aucun compte peut être supprimé ; le rôle administrateur est protégé.</p>
+    <div class="form-actions">
+      {% for r in roles if r.name != super_role and not counts.get(r.id) %}
+      <form method="post" action="/admin/roles/{{ r.id }}/delete" data-confirm="Supprimer le rôle « {{ r.description or r.name }} » ?">
+        <input type="hidden" name="csrf" value="{{ csrf_token }}">
+        <button type="submit" class="btn-danger btn-sm">{{ r.description or r.name }}</button>
+      </form>
+      {% else %}
+      <p class="muted">Aucun rôle supprimable.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

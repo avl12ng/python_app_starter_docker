@@ -1,0 +1,82 @@
+# =============================================================================
+# Python App Starter — Stack Docker Compose
+# =============================================================================
+#
+# Services :
+#   app   Application FastAPI (uvicorn), construite depuis docker/app/Dockerfile
+#   db    MariaDB dédiée
+#
+# Toute la configuration vient du fichier .env placé à côté de ce fichier.
+#
+# Premier démarrage :
+#   cp .env.example .env            # puis renseigner SECRET_KEY, mots de passe, premier admin
+#   docker compose up -d --build
+#   → http://<serveur>:${WEB_PUBLISH_PORT}
+# =============================================================================
+
+name: ${COMPOSE_PROJECT_NAME:-pyapp}
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.13}
+    image: ${APP_IMAGE:-python-app-starter}:${APP_IMAGE_TAG:-latest}
+    container_name: ${APP_CONTAINER_NAME:-pyapp_app}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ:-Europe/Paris}
+      DATABASE_URL: mysql+pymysql://${DB_USERNAME:-pyapp}:${DB_PASSWORD:?Renseignez DB_PASSWORD dans .env}@db:3306/${DB_DATABASE:-pyapp}?charset=utf8mb4
+    ports:
+      - "${WEB_PUBLISH_ADDRESS:-0.0.0.0}:${WEB_PUBLISH_PORT:-8095}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - pyapp-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: mariadb:${MARIADB_VERSION:-11.8}
+    container_name: ${DB_CONTAINER_NAME:-pyapp_db}
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Renseignez DB_ROOT_PASSWORD dans .env}
+      MARIADB_DATABASE: ${DB_DATABASE:-pyapp}
+      MARIADB_USER: ${DB_USERNAME:-pyapp}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Renseignez DB_PASSWORD dans .env}
+      MARIADB_AUTO_UPGRADE: "1"
+      TZ: ${TZ:-Europe/Paris}
+    ports:
+      - "${DB_PUBLISH_ADDRESS:-127.0.0.1}:${DB_PUBLISH_PORT:-3395}:3306"
+    volumes:
+      - pyapp_db_data:/var/lib/mysql
+      - ./docker/db/conf.d:/etc/mysql/conf.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - pyapp-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pyapp_db_data:
+
+networks:
+  pyapp-network:
+    driver: bridge

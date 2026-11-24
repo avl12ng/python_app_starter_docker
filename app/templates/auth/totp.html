@@ -1,0 +1,15 @@
+{% extends "auth_layout.html" %}
+{% block title %}Double authentification{% endblock %}
+{% block heading %}Code de vérification{% endblock %}
+{% block content %}
+<p class="auth-lead">Compte <strong>{{ username }}</strong> : saisissez le code à 6 chiffres affiché dans votre application d'authentification.</p>
+<form method="post" action="/login/totp" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <div class="field">
+    <label for="code">Code à 6 chiffres</label>
+    <input id="code" name="code" class="auth-code" inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" autocomplete="one-time-code" required autofocus>
+  </div>
+  <button type="submit" class="btn-primary-brand btn-block">Valider</button>
+</form>
+<div class="auth-links"><a href="/login">Annuler et reprendre la connexion</a></div>
+{% endblock %}

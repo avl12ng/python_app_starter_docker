@@ -1,0 +1,50 @@
+{# Macros d'interface partagées #}
+
+{% macro flashes(items) -%}
+{% if items %}
+<div class="flashes" role="status">
+  {% for kind, message in items %}
+  <div class="flash flash--{{ kind }}">{{ icon('check' if kind == 'success' else 'info', 20) }}<span>{{ message }}</span></div>
+  {% endfor %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro page_head(title, lead=None, back=None) -%}
+<header class="page-head">
+  <div>
+    {% if back %}<a class="page-head__back" href="{{ back[0] }}">{{ icon('arrow-left', 16) }} {{ back[1] }}</a>{% endif %}
+    <h1 class="page-head__title">{{ title }}</h1>
+    {% if lead %}<p class="page-head__lead">{{ lead }}</p>{% endif %}
+  </div>
+  {% if caller %}<div class="page-head__actions">{{ caller() }}</div>{% endif %}
+</header>
+{%- endmacro %}
+
+{# Liste des règles, cochées pendant la frappe par app.js #}
+{% macro password_rules(rules, min_length, match=True) -%}
+<div class="pwd-rules" data-pwd-rules data-min-length="{{ min_length }}" aria-live="polite" hidden>
+  <p class="pwd-rules__title">Le mot de passe doit contenir :</p>
+  <ul>
+    {% for key, label in rules %}<li data-rule="{{ key }}">{{ label }}</li>{% endfor %}
+    {% if match %}<li data-rule="match">Les deux saisies identiques</li>{% endif %}
+  </ul>
+</div>
+{%- endmacro %}
+
+{# Boutons d'export CSV + Excel qui suivent les filtres (remplacés par la recherche dynamique) #}
+{% macro export_buttons(id, base, query) -%}
+<span class="page-head__actions" id="{{ id }}" data-live-sync>
+  <a class="btn-ghost btn-sm" href="{{ base }}.csv{{ '?' ~ query if query }}">{{ icon('download', 18) }} CSV</a>
+  <a class="btn-ghost btn-sm" href="{{ base }}.xlsx{{ '?' ~ query if query }}">{{ icon('download', 18) }} Excel</a>
+</span>
+{%- endmacro %}
+
+{% macro search_field(name, value, placeholder) -%}
+<label class="search">
+  {{ icon('search', 20) }}
+  <span class="visually-hidden">{{ placeholder }}</span>
+  <input type="search" name="{{ name }}" value="{{ value }}" placeholder="{{ placeholder }}" autocomplete="off">
+  <button type="button" class="search__clear" data-live-clear aria-label="Effacer la recherche" hidden>{{ icon('close', 18) }}</button>
+</label>
+{%- endmacro %}

@@ -1,0 +1,66 @@
+/* Pages publiques (connexion, 2FA, mot de passe oublié) — reprise de digitization_commercial styles/auth.css */
+
+.auth-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.auth-card {
+  width: min(420px, 100%);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--shell-glass-strong);
+  backdrop-filter: var(--shell-blur);
+  -webkit-backdrop-filter: var(--shell-blur);
+  box-shadow: var(--shadow-navy);
+}
+.auth-card--wide {
+  width: min(480px, 100%);
+}
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.auth-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+.auth-card h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--color-navy);
+}
+.auth-lead {
+  margin: 6px 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+.auth-code {
+  font-size: 1.4rem;
+  letter-spacing: 0.3em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.auth-foot {
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-outline);
+}
