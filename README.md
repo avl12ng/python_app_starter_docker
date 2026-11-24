@@ -118,3 +118,8 @@ docs/technique/      documentation technique (architecture, déploiement, exploi
 - [Documentation technique](docs/technique/README.md) : architecture, déploiement, configuration, données,
   règles de sécurité, développement, exploitation.
 - Mode d'emploi utilisateur : à rédiger quand les écrans métier existeront (voir la documentation technique).
+
+## Licence
+
+MIT, voir [LICENSE](LICENSE). La police Hanken Grotesk est sous licence SIL OFL 1.1
+([app/static/fonts/HankenGrotesk-OFL.txt](app/static/fonts/HankenGrotesk-OFL.txt)).

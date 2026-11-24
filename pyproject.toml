@@ -1,6 +1,7 @@
 [project]
 name = "python-app-starter"
 version = "0.1.0"
+license = "MIT"
 description = "Squelette d'application web Python (FastAPI) avec authentification sécurisée et charte graphique de digitization_commercial"
 requires-python = ">=3.12"
 dependencies = [
