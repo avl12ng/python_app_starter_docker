@@ -56,6 +56,11 @@ def test_mot_de_passe_faible_refuse(client):
 def test_sauvegarde_sqlite_a_chaud(app, settings, basic, tmp_path):
     import sqlite3
 
+    import pytest
+
+    if not settings.database_url.startswith("sqlite"):
+        pytest.skip("sauvegarde propre à SQLite (MariaDB : mariadb-dump)")
+
     from app.cli import backup_sqlite
 
     target = backup_sqlite(settings.database_url, str(tmp_path / "copie.db"))
